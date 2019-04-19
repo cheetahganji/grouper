@@ -2,6 +2,12 @@
 
 EXIF 기반 파일 분류(동영상 파일도 가능한지 확인요망)
 
+필수 설정 변수
+    _path_dir       # 작업 경로
+    _is_year_path_dir       # _path_dir가 연도폴더인지 아닌지
+    _fr_year        # 생성할 폴더 시작년도
+    _to_year        # 생성할 폴더 종료년도
+
 하기 EXIF 기준으로 파일을 분류하며 순서는 다음과 같다.
     BASE EXIF
     1. DateTimeOriginal
