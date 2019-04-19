@@ -50,6 +50,8 @@ _exif_filter = ['DateTimeOriginal', 'DateTimeDigitized', 'DateTime']    # EXIF �
 _path_dir = ''  # 디렉토리 설정(연도폴더)
 #''C:\Users\user\Desktop\PythonTestData'  # 디렉토리 설정(연도폴더)
 
+_is_year_path_dir = None        # _path_dir가 연도폴더인지 아닌지
+
 _fr_year = ''       # 생성할 폴더 시작년도
 _to_year = ''       # 생성할 폴더 종료년도
 
@@ -319,7 +321,11 @@ def get_path_src_dst(min_date_files):
             if m:
                 year = m.group(1)
                 year_month = m.group(1) + '_' + m.group(2)
-                dst_path_item = os.path.join(_path_dir, year, year_month, file_name)
+                if _is_year_path_dir:
+                    dst_path_item = os.path.join(_path_dir, year_month, file_name)
+                else:
+                    dst_path_item = os.path.join(_path_dir, year, year_month, file_name)
+
                 path_src_dst[file] = dst_path_item
 
     return path_src_dst
@@ -332,22 +338,25 @@ if __name__ == "__main__":
     # 기초 데이터 설정
     ext_filter = ['.jpg', '.jpeg', '.png', '.gif', '.mp4', '.mov', '.mkv', '.avi']      # 확장자 필터
 
-    _path_dir = 'C:/Users/user/Desktop/ccc'    # 작업 경로  ex) 'C:/Users/user/Desktop/ccc'
-    is_year_path_dir = False        # _path_dir가 연도폴더인지 아닌지
+    _path_dir = 'C:/Users/user/Desktop/ddd'    # 작업 경로  ex) 'C:/Users/user/Desktop/ccc'
+    _is_year_path_dir = False        # _path_dir가 연도폴더인지 아닌지
 
     _fr_year = '2010'       # 생성할 폴더 시작년도
     _to_year = '2019'       # 생성할 폴더 종료년도
 
     if os.path.isdir(_path_dir):
         # 연도폴더와 하위 월폴더 생성
-        if not is_year_path_dir:
+        if not _is_year_path_dir:
             years = get_year_list(_fr_year, _to_year)
+            make_year_dirs(_path_dir, years, crt_ym=True)
         else:
-            year = os.path.basename(_path_dir)
-            years = get_year_list(year, year)
+            print(_path_dir)
+            # year = os.path.basename(_path_dir)
+            # years = get_year_list(year, year)
+            make_ym_dirs(_path_dir)
 
         
-        make_year_dirs(_path_dir, years, crt_ym=True)
+
 
         # 작업 경로 내부 파일별로 EXIF 정보 가져오기
         exif_data_files = get_exif_multi_file(_path_dir)
